@@ -111,7 +111,7 @@ function buildCharts(sample) {
     // Deliverable 1: 9. Create the layout for the bar chart. 
     var barLayout = {
       font: {color: "black"},
-      paper_bgcolor:'red'),
+      paper_bgcolor:'red',
       xaxis: {title: "Sample Values"},
       yaxis: {title: "OTU-ID Numbers"},
       title: "Top 10 Bacteria Cultures Found",
