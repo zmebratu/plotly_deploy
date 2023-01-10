@@ -61,47 +61,46 @@ function buildCharts(sample) {
     console.log(data);
 
     // Deliverable 1: 3. Create a variable that holds the samples array. 
-    var samplesarray = data.samples;
+    var samples = data.samples;
 
 
     // Deliverable 1: 4. Create a variable that filters the samples for the object with the desired sample number.
-    var samples = samples.filter(sampleObj => sampleObj.id == sample);
+    var resultSample= samples.filter(number => number.id == sample);
 
     // Deliverable 3: 1. Create a variable that filters the metadata array for the object with the desired sample number.
     d3.json("samples.json").then((data) => {
       var metadata = data.metadata;
-    var metaarray = metadata.filter(sampleObj => sampleObj.id == sample);
+    var resultmeta = metadata.filter(sampleObj => sampleObj.id == sample);
 
     // Deliverable 1: 5. Create a variable that holds the first sample in the array.
-    var sampleresult = sampleArray[0];
+    var firstResultSample = resultSample[0];
+   console.log(firstResultSample);
 
     // Deliverable 3: 2. Create a variable that holds the first sample in the metadata array.
-    var resultmeta = metaArray[0];
+    var firstResultMeta = resultMeta[0]
+    console.log(firstResultMeta);
 
     // Deliverable 1: 6. Create variables that hold the otu_ids, otu_labels, and sample_values.
-    var otu_ids = sample.otu_ids
-    var otu_labels = sample.otu_labels
-    var sample_values = sample.sample_values;
-    console.log(otu_ids)
-    console.log(otu_labels)
-    console.log(sample_values)
+    var otu_id = firstResultSample.otu_ids;
+    var labels = firstResultSample.otu_labels;
+    var values = firstResultSample.sample_values;
 
 
     // Deliverable 3: 3. Create a variable that holds the washing frequency.
-    var washing = parseFloat(resultmeta.wfrequency)
-    console.log(washing)
+    var wFrq = parseFloat(firstResultMeta.wfreq);
+    
 
 
     // Deliverable 1: 7. Create the yticks for the bar chart.
     // Hint: Get the the top 10 otu_ids and map them in descending order 
     // so the otu_ids with the most bacteria are last. 
-    var yticks = otu_ids.slice(0,10).map(id => `OTU ${id}`).reverse();
+    var yticks = otu_id.slice(0, 10).map(x => `otu ${x}`).reverse();
 
     // Deliverable 1: 8. Create the trace for the bar chart. 
     var barData = [ {
       x: sample_values.slice(0,10).reverse(),
-      y: yticks,
       text: otu_labels,
+      y: yticks,
       type:'bar',
       orientation: 'h'
       
@@ -110,35 +109,38 @@ function buildCharts(sample) {
     ];
 
     // Deliverable 1: 9. Create the layout for the bar chart. 
-    var barLayout = {     
-      title: "Top 10 Bacteria Cultures Found",
+    var barLayout = {
+      font: {color: "black"},
+      paper_bgcolor:'red'),
       xaxis: {title: "Sample Values"},
-      yaxis: {title: "ID's"}
-
+      yaxis: {title: "OTU-ID Numbers"},
+      title: "Top 10 Bacteria Cultures Found",
+      color: "blue"
     };
 
     // Deliverable 1: 10. Use Plotly to plot the data with the layout. 
     Plotly.newPlot("bar",barData, barLayout);
 
     // Deliverable 2: 1. Create the trace for the bubble chart.
-    var bubbleData = [{
-      x: otu_ids,
-      y: sample_values,
-      text: otu_labels,
-      mode: 'markers',
+    var bubbleData = {
+      x: otu_id,
+      y: values, 
+      text: labels, 
+      mode: "markers", 
       marker: {
-        size: sample_values,
-        color: otu_ids,
-        colorscale: 'Bright'
+        color: otu_id, 
+        size: values, 
       }
-    }];
+    }
 
     // Deliverable 2: 2. Create the layout for the bubble chart.
     var bubbleLayout = {
       title: "Bacteria Cultures Per Sample",
       xaxis: {title: "OTU ID"},
-      yaxis: {title: "ID's"}
-      
+      font: {color: "black"},
+      paper_bgcolor:'blue'),
+      yaxis: {title: "Sample Values"},
+      hovermode: "closest" 
     };
 
     // Deliverable 2: 3. Use Plotly to plot the data with the layout.
@@ -148,10 +150,10 @@ function buildCharts(sample) {
     var gaugeData = [
       {
         domain: {x: [], y: []},
-        value: wfrequency,
+        value: wFrq,
         title: '<b>"Belly Button Washing Frequency"</b> <br> <b>Scrub Per Week</b>',
-        type: "indicator", 
         mode: "gauge+number",
+        type: "indicator", 
         gauge: {
           axis: {range: [, 10]},
           bar: {color: "blue"},
